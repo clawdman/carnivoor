@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carnivoor">
+<meta name="theme-color" content="#0d0d0d">
+<title>12 Weken Carnivoor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#0d0d0d;color:#f5f0e8;font-family:system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{padding-bottom:env(safe-area-inset-bottom)}
+::-webkit-scrollbar{width:0}
+.page{padding:16px 16px 100px;max-width:480px;margin:0 auto}
+.title{font-weight:900;font-size:26px;line-height:1.15;letter-spacing:-0.5px}
+.sub{font-size:14px;color:#98989d;margin-top:5px}
+.card{background:#1c1c1e;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #2c2c2e}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-t{font-weight:700;font-size:15px}
+.mono{font-family:monospace}
+.badge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;background:#e85d3a;color:#fff}
+.badge.ok{background:#30d158;color:#000}
+.chk{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.chk:last-child{border-bottom:none}
+.chk:active{opacity:.7}
+.box{width:24px;height:24px;border-radius:7px;border:2px solid #3a3a3c;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:800;color:#000;transition:all .15s}
+.box.on{background:#30d158;border-color:#30d158}
+.chk-e{font-size:17px;width:24px;text-align:center;flex-shrink:0}
+.chk-l{font-size:14px;line-height:1.4}
+.chk.done .chk-l{opacity:.35;text-decoration:line-through}
+.chk-s{font-size:12px;color:#98989d;margin-top:2px}
+.pbar{height:5px;background:#2c2c2e;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#e85d3a,#f0a030);transition:width .5s ease}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:#1c1c1e;border-radius:16px;padding:18px 14px;border:1px solid #2c2c2e;text-align:center}
+.stat-v{font-family:monospace;font-size:28px;font-weight:700}
+.stat-l{font-size:10px;color:#98989d;margin-top:5px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.streak{background:linear-gradient(135deg,rgba(232,93,58,.13),rgba(240,160,48,.08));border:1px solid rgba(232,93,58,.18);border-radius:16px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.motiv{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(48,209,88,.15);border-radius:16px;padding:20px;margin-bottom:14px;text-align:center}
+.alert{padding:13px 16px;border-radius:16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.alert-w{background:rgba(255,214,10,.1);border:1px solid rgba(255,214,10,.15);color:#ffd60a}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;width:100%;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.btn-p{background:#e85d3a;color:#fff}
+.btn-s{background:#2c2c2e;color:#f5f0e8;border:1px solid #3a3a3c}
+.btn-d{background:rgba(255,69,58,.12);color:#ff453a;border:1px solid rgba(255,69,58,.15)}
+.btn-sm{padding:8px 16px;font-size:13px;width:auto}
+.inp{width:100%;padding:13px 14px;background:#2c2c2e;border:1px solid #3a3a3c;border-radius:10px;color:#f5f0e8;font-family:inherit;font-size:15px;outline:none}
+.inp:focus{border-color:#e85d3a}
+.lbl{display:block;font-size:12px;font-weight:700;color:#98989d;margin-bottom:6px}
+.wnav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.wnav-b{width:38px;height:38px;border-radius:50%;background:#1c1c1e;border:1px solid #2c2c2e;color:#f5f0e8;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.wnav-b:disabled{opacity:.25;cursor:not-allowed}
+.dcard{background:#1c1c1e;border-radius:16px;padding:14px 16px;margin-bottom:8px;border:1px solid #2c2c2e;display:flex;align-items:center;justify-content:space-between;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dcard:active{transform:scale(.98)}
+.dcard.today{border-color:#e85d3a;box-shadow:0 0 24px rgba(232,93,58,.25)}
+.dcard.complete{border-color:rgba(48,209,88,.25)}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.photo{aspect-ratio:3/4;background:#2c2c2e;border-radius:16px;border:2px dashed #3a3a3c;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo-lb{position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:12px;font-weight:700;text-align:center}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px}
+.modal-c{background:#1c1c1e;border-radius:16px;padding:24px;max-width:380px;width:100%;border:1px solid #2c2c2e}
+.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.row:last-child{border-bottom:none}
+textarea{width:100%;padding:12px;background:#2c2c2e;border:1px solid #3a3a3c;border-radius:10px;color:#f5f0e8;font-family:inherit;font-size:14px;resize:vertical;min-height:80px;outline:none;line-height:1.5}
+textarea:focus{border-color:#e85d3a}
+.wdiff{font-family:monospace;font-size:12px;font-weight:600;padding:3px 9px;border-radius:12px}
+.wdiff.loss{color:#30d158;background:rgba(48,209,88,.12)}
+.wdiff.gain{color:#ff453a;background:rgba(255,69,58,.12)}
+.nav{position:fixed;bottom:0;left:0;right:0;height:calc(72px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(13,13,13,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:space-around;z-index:100;border-top:1px solid #2c2c2e}
+.nav-i{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;cursor:pointer;color:#636366;font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;user-select:none;-webkit-tap-highlight-color:transparent}
+.nav-i.on{color:#e85d3a}
+.nav-ic{font-size:22px;line-height:1}
+.setup{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px;max-width:420px;margin:0 auto}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import{h,render,Component}from"https://esm.sh/preact@10.19.3";
+import{useState,useCallback,useRef,useMemo,useEffect}from"https://esm.sh/preact@10.19.3/hooks";
+import htm from"https://esm.sh/htm@3.1.1";
+const html=htm.bind(h);
+
+/* === DATA === */
+const DAYS=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
+const DL={maandag:"Maandag",dinsdag:"Dinsdag",woensdag:"Woensdag",donderdag:"Donderdag",vrijdag:"Vrijdag",zaterdag:"Zaterdag",zondag:"Zondag"};
+const DT={maandag:"",dinsdag:"Training",woensdag:"",donderdag:"Werk",vrijdag:"",zaterdag:"Training",zondag:"Training"};
+
+const W14={
+maandag:{m:[{id:"lunch",l:"Lunch: 300g gehakt + 4 eieren",e:"🥩"},{id:"diner",l:"Diner: 400g spareribs",e:"🍖"}],a:[{id:"wandelen",l:"Wandelen: 30-45 min",e:"🚶"}]},
+dinsdag:{m:[{id:"lunch",l:"Lunch: 350g gehakt + 4 eieren + 50g leverworst",e:"🥩"},{id:"diner",l:"Diner: 500g ribeye + 3 eierdooiers",e:"🥩"}],a:[{id:"training",l:"Full body training 15:00-16:00",e:"🏋️"}]},
+woensdag:{m:[{id:"lunch",l:"Lunch: 100g bacon + 4 eieren",e:"🥓"},{id:"diner",l:"Diner: 400g ribeye",e:"🥩"}],a:[{id:"wandelen",l:"Wandelen: 30-45 min",e:"🚶"}]},
+donderdag:{m:[{id:"lunch",l:"Lunch: 400g wings + 3 eieren (meenemen)",e:"🍗"},{id:"diner",l:"Diner: 350g gehakt",e:"🥩"}],a:[{id:"wandelen",l:"Wandelen: 30-45 min",e:"🚶"}]},
+vrijdag:{m:[{id:"lunch",l:"Lunch: 350g gehakt + 4 eieren + 50g leverworst",e:"🥩"},{id:"diner",l:"Diner: 450g spareribs",e:"🍖"}],a:[{id:"wandelen",l:"Wandelen: 30-45 min",e:"🚶"}]},
+zaterdag:{m:[{id:"lunch",l:"Lunch: 400g gehakt + 5 eieren",e:"🥩"},{id:"diner",l:"Diner: 500g ribeye + 100g bacon + 3 eierdooiers",e:"🥩"}],a:[{id:"training",l:"Full body training 15:00-16:00",e:"🏋️"}]},
+zondag:{m:[{id:"lunch",l:"Lunch: 400g wings + 5 eieren + 50g leverworst",e:"🍗"},{id:"diner",l:"Diner: 500g spareribs + 100g bacon",e:"🍖"}],a:[{id:"training",l:"Full body training 15:00-16:00",e:"🏋️"},{id:"wandelen",l:"Wandelen: 45-60 min",e:"🚶"}]}
+};
+const W512={
+maandag:{m:[{id:"lunch",l:"Lunch: 300g gehakt + 4 eieren + 150g Griekse yoghurt",e:"🥩"},{id:"diner",l:"Diner: 400g spareribs",e:"🍖"}],a:W14.maandag.a},
+dinsdag:W14.dinsdag,
+woensdag:{m:[{id:"lunch",l:"Lunch: 100g bacon + 4 eieren + 150g Griekse yoghurt",e:"🥓"},{id:"diner",l:"Diner: 400g ribeye",e:"🥩"}],a:W14.woensdag.a},
+donderdag:W14.donderdag,
+vrijdag:{m:[{id:"lunch",l:"Lunch: 350g gehakt + 4 eieren + 50g leverworst + 150g yoghurt",e:"🥩"},{id:"diner",l:"Diner: 450g spareribs",e:"🍖"}],a:W14.vrijdag.a},
+zaterdag:W14.zaterdag,zondag:W14.zondag
+};
+const gP=w=>w<=4?W14:W512;
+const SUPP=[{id:"boter",l:"Koken met boter",e:"🧈"},{id:"zout",l:"Zeezout bij maaltijden",e:"🧂"},{id:"omega3",l:"Omega-3 1000mg",e:"💊"},{id:"magnesium",l:"Magnesium 400mg",e:"💊"}];
+const gI=(w,d)=>{const p=gP(w)[d];return[...p.m,...p.a,...SUPP]};
+
+const gGL=w=>{const i=[];if([1,5,9].includes(w))i.push({n:"5kg Ribeye",p:122.49,c:"m"},{n:"5kg Spareribs",p:42.49,c:"m"},{n:"5kg Rundergehakt",p:49.95,c:"m"},{n:"5kg Kippenvleugels",p:33.99,c:"m"});i.push({n:"500g Bacon",p:5,c:"s"},{n:"400g Leverworst",p:3,c:"s"},{n:"30 Eieren (3x10)",p:8,c:"s"},{n:"500g Boter (2x250g)",p:5,c:"s"});if(w===1)i.push({n:"1kg Zeezout",p:2,c:"s"});if(w>=5)i.push({n:"450g Griekse yoghurt 10%",p:4,c:"s"});if(w===1)i.push({n:"Omega-3 1000mg",p:13,c:"p"},{n:"Magnesium 400mg",p:8,c:"p"});return i};
+
+const MOT=[{w:1,e:"🚀",t:"Week 1 — De Start!",s:"Je lichaam past zich aan. Hou vol!"},{w:2,e:"💪",t:"Week 2 — Aanpassing",s:"Eerste dip is normaal!"},{w:3,e:"⚡",t:"Week 3 — Energie!",s:"Meer energie merkbaar!"},{w:4,e:"🎯",t:"1 Maand!",s:"4 weken carnivoor!"},{w:5,e:"📦",t:"MFM + Yoghurt!",s:"Bestel vlees & voeg yoghurt toe."},{w:6,e:"📈",t:"Halverwege!",s:"50% klaar!"},{w:8,e:"🏆",t:"2 Maanden!",s:"Finish in zicht!"},{w:9,e:"📦",t:"Laatste MFM!",s:"Laatste vlees bestelling!"},{w:10,e:"🎯",t:"Laatste 3!",s:"Sprint naar finish!"},{w:12,e:"🏅",t:"KLAAR!",s:"12 weken voltooid!"}];
+
+/* === STORAGE === */
+function LS(k,d){try{const v=localStorage.getItem("cc_"+k);return v?JSON.parse(v):d}catch{return d}}
+function SS(k,v){try{localStorage.setItem("cc_"+k,JSON.stringify(v))}catch{}}
+function useLS(k,d){const[v,sV]=useState(()=>LS(k,d));const up=useCallback(n=>{sV(p=>{const r=typeof n==="function"?n(p):n;SS(k,r);return r})},[k]);return[v,up]}
+
+/* === SETUP === */
+function Setup({onDone}){
+  const[s,sS]=useState(0),[d,sD]=useState(new Date().toISOString().split("T")[0]),[w,sW]=useState("108"),[g,sG]=useState("95");
+  const fin=()=>onDone({startDate:d,startWeight:+w,goalWeight:+g,ok:true},[{week:0,day:"start",weight:+w,date:d}]);
+  if(s===0)return html`<div class="setup"><div style="font-size:56px;text-align:center;margin-bottom:12px">🥩</div><div class="title" style="text-align:center;font-size:28px">12 Weken Carnivoor</div><div style="text-align:center;color:#98989d;font-size:15px;margin-top:8px;margin-bottom:40px">Word de beste versie van jezelf</div><button class="btn btn-p" onClick=${()=>sS(1)}>Laten we beginnen →</button></div>`;
+  if(s===1)return html`<div class="setup"><div class="mono" style="font-size:12px;color:#e85d3a;text-align:center;margin-bottom:24px">STAP 1/3</div><div class="title" style="text-align:center;font-size:22px;margin-bottom:24px">Wanneer begin je?</div><div style="margin-bottom:20px"><input type="date" class="inp" value=${d} onInput=${e=>sD(e.target.value)}/></div><button class="btn btn-p" onClick=${()=>sS(2)}>Volgende →</button></div>`;
+  if(s===2)return html`<div class="setup"><div class="mono" style="font-size:12px;color:#e85d3a;text-align:center;margin-bottom:24px">STAP 2/3</div><div class="title" style="text-align:center;font-size:22px;margin-bottom:24px">Je gewicht</div><div style="margin-bottom:16px"><label class="lbl">Huidig (kg)</label><input type="number" class="inp" value=${w} onInput=${e=>sW(e.target.value)}/></div><div style="margin-bottom:20px"><label class="lbl">Doel (kg)</label><input type="number" class="inp" value=${g} onInput=${e=>sG(e.target.value)}/></div><button class="btn btn-p" onClick=${()=>sS(3)}>Volgende →</button></div>`;
+  return html`<div class="setup"><div class="mono" style="font-size:12px;color:#e85d3a;text-align:center;margin-bottom:24px">STAP 3/3</div><div class="title" style="text-align:center;font-size:22px;margin-bottom:4px">Klaar!</div><div style="text-align:center;color:#98989d;font-size:14px;margin-bottom:28px">${w}kg → ${g}kg • ~€88/week</div><button class="btn btn-p" onClick=${fin}>🔥 Start de Challenge!</button></div>`;
+}
+
+/* === CHECKROW === */
+function Chk({on,label,sub,emoji,click}){
+  return html`<div class="chk${on?" done":""}" onClick=${click}><div class="box${on?" on":""}">${on?"✓":""}</div>${emoji&&html`<span class="chk-e">${emoji}</span>`}<div style="flex:1"><div class="chk-l">${label}</div>${sub&&html`<div class="chk-s">${sub}</div>`}</div></div>`;
+}
+
+/* === TODAY === */
+function Today({se,cw,cd,co,sC,no,sN}){
+  const dn=DAYS[cd],dp=gP(cw)[dn],dk="w"+cw+"-"+dn;
+  const tog=id=>{const k=dk+"-"+id;sC(p=>({...p,[k]:!p[k]}))};
+  const ai=gI(cw,dn),cc=ai.filter(i=>co[dk+"-"+i.id]).length,pr=ai.length>0?(cc/ai.length)*100:0;
+  const mo=MOT.find(m=>m.w===cw);
+  const el=Math.max(0,Math.floor((new Date()-new Date(se.startDate))/864e5));
+  const rem=Math.max(0,84-el),tag=DT[dn];
+  const st=useMemo(()=>{let c=0;for(let i=0;i<84;i++){const d2=new Date();d2.setDate(d2.getDate()-i);const w=Math.max(1,Math.min(12,Math.floor((d2-new Date(se.startDate))/(7*864e5))+1)),di=(d2.getDay()+6)%7,dn2=DAYS[di],items=gI(w,dn2);if(items.every(it=>co["w"+w+"-"+dn2+"-"+it.id]))c++;else break}return c},[co,se.startDate]);
+
+  return html`<div class="page">
+    <div style="padding:12px 0 20px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="title">${DL[dn]}</div><div class="sub">Week ${cw}/12 • Nog ${rem} dagen${tag?" • "+tag:""}</div></div><div class="badge${pr===100?" ok":""}">${Math.round(pr)}%</div></div><div class="pbar" style="margin-top:14px"><div class="pfill" style="width:${pr}%"/></div></div>
+    ${st>=3&&html`<div class="streak"><span style="font-size:30px">🔥</span><div><div style="font-weight:700;font-size:15px">${st} dagen op rij!</div><div style="font-size:12px;color:#98989d">Je bent on fire!</div></div></div>`}
+    ${mo&&html`<div class="motiv"><div style="font-size:38px;margin-bottom:8px">${mo.e}</div><div style="font-weight:700;font-size:16px;margin-bottom:4px">${mo.t}</div><div style="font-size:13px;color:#98989d">${mo.s}</div></div>`}
+    <div class="card"><div class="card-h"><span class="card-t">🍖 Maaltijden</span><span class="mono" style="font-size:12px;color:#98989d">${dp.m.filter(i=>co[dk+"-"+i.id]).length}/${dp.m.length}</span></div>${dp.m.map(i=>html`<${Chk} key=${i.id} on=${!!co[dk+"-"+i.id]} label=${i.l} emoji=${i.e} click=${()=>tog(i.id)}/>`)}</div>
+    <div class="card"><div class="card-h"><span class="card-t">${dp.a.some(t=>t.id==="training")?"🏋️ Training":"🚶 Beweging"}</span><span class="mono" style="font-size:12px;color:#98989d">${dp.a.filter(i=>co[dk+"-"+i.id]).length}/${dp.a.length}</span></div>${dp.a.map(i=>html`<${Chk} key=${i.id} on=${!!co[dk+"-"+i.id]} label=${i.l} emoji=${i.e} click=${()=>tog(i.id)}/>`)}</div>
+    <div class="card"><div class="card-h"><span class="card-t">💊 Supplementen</span></div>${SUPP.map(i=>html`<${Chk} key=${i.id} on=${!!co[dk+"-"+i.id]} label=${i.l} emoji=${i.e} click=${()=>tog(i.id)}/>`)}</div>
+    <div class="card"><div class="card-h"><span class="card-t">📝 Notities</span></div><textarea placeholder="Hoe voel je je vandaag?" value=${no[dk]||""} onInput=${e=>sN(p=>({...p,[dk]:e.target.value}))}/></div>
+  </div>`;
+}
+
+/* === WEEK === */
+function WeekPg({se,cw,cd,co,onSel}){
+  const[vw,sV]=useState(cw);
+  const gD=d=>{const items=gI(vw,d);return{done:items.filter(i=>co["w"+vw+"-"+d+"-"+i.id]).length,total:items.length}};
+  const wt=DAYS.reduce((ac,d)=>{const s=gD(d);return{done:ac.done+s.done,total:ac.total+s.total}},{done:0,total:0});
+  const wp=wt.total>0?Math.round(wt.done/wt.total*100):0;
+  return html`<div class="page">
+    <div style="padding:12px 0 20px"><div class="title">Week Overzicht</div><div class="sub">${vw<=4?"Fase 1: Strict Carnivoor":"Fase 2: + Griekse Yoghurt"}</div></div>
+    <div class="wnav"><button class="wnav-b" disabled=${vw<=1} onClick=${()=>sV(v=>v-1)}>‹</button><span class="mono" style="font-size:16px;font-weight:700;min-width:100px;text-align:center">Week ${vw}</span><button class="wnav-b" disabled=${vw>=12} onClick=${()=>sV(v=>v+1)}>›</button></div>
+    ${DAYS.map((day,idx)=>{const{done,total}=gD(day),pct=total>0?Math.round(done/total*100):0,isT=vw===cw&&idx===cd,isD=pct===100;return html`<div class="dcard${isT?" today":""}${isD?" complete":""}" onClick=${()=>onSel(idx)}><div><div style="font-weight:700;font-size:15px">${DL[day]}${isT&&html` <span style="color:#e85d3a;font-size:10px;font-weight:800">VANDAAG</span>`}</div><div class="mono" style="font-size:12px;color:#98989d;margin-top:2px">${done}/${total}${DT[day]?" • "+DT[day]:""}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="width:50px;height:5px;background:#2c2c2e;border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;border-radius:3px;background:${isD?"#30d158":"#e85d3a"}"/></div>${isD&&html`<span style="color:#30d158;font-size:18px">✓</span>`}</div></div>`})}
+    <div class="card" style="margin-top:8px;text-align:center"><div style="font-size:12px;color:#98989d;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Week ${vw}</div><div class="mono" style="font-size:32px;font-weight:700;color:#e85d3a;margin:4px 0">${wp}%</div><div class="pbar"><div class="pfill" style="width:${wp}%"/></div></div>
+  </div>`;
+}
+
+/* === PROGRESS === */
+function Prog({se,co,wl,sWL}){
+  const[nw,sNw]=useState(""),[sa,sSa]=useState(false),[ph,sPh]=useLS("photos",{});
+  const fr=useRef(null),[pt,sPt]=useState(null);
+  const add=()=>{const w=+nw;if(isNaN(w)||w<50||w>200)return;const t=new Date(),wn=Math.max(1,Math.min(12,Math.ceil((t-new Date(se.startDate))/(7*864e5)))),di=(t.getDay()+6)%7;sWL(p=>[...p,{week:wn,day:DAYS[di],weight:w,date:t.toISOString().split("T")[0]}].sort((a,b)=>new Date(a.date)-new Date(b.date)));sNw("");sSa(false)};
+  const hP=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>sPh(p=>({...p,[pt]:ev.target.result}));r.readAsDataURL(f)};
+  const el=Math.max(0,Math.floor((new Date()-new Date(se.startDate))/864e5));
+  const cDays=useMemo(()=>{let c=0;for(let w=1;w<=12;w++)for(const d of DAYS){if(gI(w,d).every(i=>co["w"+w+"-"+d+"-"+i.id]))c++}return c},[co]);
+  const cW=wl.length>0?wl[wl.length-1].weight:se.startWeight;
+  const lost=se.startWeight-cW,toG=cW-se.goalWeight;
+
+  return html`<div class="page">
+    <div style="padding:12px 0 20px"><div class="title">Voortgang</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-v" style="color:#e85d3a">${cW}</div><div class="stat-l">Huidig (kg)</div></div>
+      <div class="stat"><div class="stat-v" style="color:${lost>0?"#30d158":"#f5f0e8"}">${lost>0?"-":""}${Math.abs(lost).toFixed(1)}</div><div class="stat-l">Afgevallen</div></div>
+      <div class="stat"><div class="stat-v" style="color:#e85d3a">${cDays}</div><div class="stat-l">Dagen klaar</div></div>
+      <div class="stat"><div class="stat-v" style="color:${toG<=0?"#30d158":"#ffd60a"}">${toG>0?toG.toFixed(1):"🎉"}</div><div class="stat-l">${toG>0?"Tot doel":"Bereikt!"}</div></div>
+    </div>
+    <div class="card"><div class="card-h"><span class="card-t">⚖️ Gewicht</span><button class="btn btn-s btn-sm" onClick=${()=>sSa(true)}>+ Weging</button></div>
+      ${wl.slice().reverse().slice(0,8).map((en,i)=>{const pv=wl[wl.indexOf(en)-1],df=pv?en.weight-pv.weight:0;return html`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:13px;color:#98989d">${en.week===0?"Start":new Date(en.date).toLocaleDateString("nl-NL",{day:"numeric",month:"short"})} W${en.week}</span><div style="display:flex;align-items:center;gap:8px"><span class="mono" style="font-weight:700;font-size:15px">${en.weight}kg</span>${df!==0&&html`<span class="wdiff ${df<0?"loss":"gain"}">${df>0?"+":""}${df.toFixed(1)}</span>`}</div></div>`})}
+    </div>
+    <div class="card"><div class="card-h"><span class="card-t">📸 Foto's</span></div><input ref=${fr} type="file" accept="image/*" style="display:none" onChange=${hP}/><div class="photos">${[["w0","Week 0"],["w4","Week 4"],["w8","Week 8"],["w12","Week 12"]].map(([k,lb])=>html`<div class="photo" onClick=${()=>{sPt(k);fr.current?.click()}}>${ph[k]?html`<img src=${ph[k]}/><div class="photo-lb">${lb}</div>`:html`<div style="font-size:32px;opacity:.3">📷</div><div style="font-size:12px;color:#636366;margin-top:4px">${lb}</div>`}</div>`)}</div></div>
+    <div class="card" style="text-align:center"><div class="mono" style="font-size:42px;font-weight:700;color:#e85d3a;margin:12px 0">${Math.min(100,Math.round(el/84*100))}%</div><div style="font-size:13px;color:#98989d;margin-bottom:8px">van 12 weken</div><div class="pbar"><div class="pfill" style="width:${Math.min(100,el/84*100)}%"/></div></div>
+    ${sa&&html`<div class="modal" onClick=${()=>sSa(false)}><div class="modal-c" onClick=${e=>e.stopPropagation()}><div style="font-weight:700;font-size:17px;margin-bottom:16px">⚖️ Gewicht toevoegen</div><input type="number" class="inp" placeholder="bijv. 105.5" value=${nw} onInput=${e=>sNw(e.target.value)} style="margin-bottom:16px"/><div style="display:flex;gap:8px"><button class="btn btn-s" style="flex:1" onClick=${()=>sSa(false)}>Annuleren</button><button class="btn btn-p" style="flex:1" onClick=${add}>Opslaan</button></div></div></div>`}
+  </div>`;
+}
+
+/* === GROCERIES === */
+function Groc({cw,gr,sG}){
+  const[vw,sV]=useState(cw),list=gGL(vw),wk="w"+vw,isM=[1,5,9].includes(vw);
+  const tog=i=>sG(p=>{const c=p[wk]||{};return{...p,[wk]:{...c,[i]:!c[i]}}});
+  const ck=gr[wk]||{},cc=Object.values(ck).filter(Boolean).length;
+  const ct=c=>list.filter(i=>i.c===c).reduce((s,i)=>s+i.p,0);
+  const total=list.reduce((s,i)=>s+i.p,0);
+  const rG=(cat,title,sub)=>{const items=list.filter(i=>i.c===cat);if(!items.length)return null;return html`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:14px"><span class="card-t">${title}</span><span class="mono" style="font-size:16px;font-weight:700;color:#e85d3a">€${ct(cat).toFixed(2)}</span></div>${sub&&html`<div style="font-size:12px;color:#98989d;margin-bottom:8px">${sub}</div>`}${items.map(it=>{const idx=list.indexOf(it);return html`<${Chk} key=${idx} on=${!!ck[idx]} label=${it.n} sub=${"€"+it.p.toFixed(2)} click=${()=>tog(idx)}/>`})}</div>`};
+
+  return html`<div class="page">
+    <div style="padding:12px 0 20px"><div class="title">Boodschappen</div><div class="sub">${cc}/${list.length} afgevinkt</div></div>
+    <div class="wnav"><button class="wnav-b" disabled=${vw<=1} onClick=${()=>sV(v=>v-1)}>‹</button><span class="mono" style="font-size:16px;font-weight:700;min-width:100px;text-align:center">Week ${vw}</span><button class="wnav-b" disabled=${vw>=12} onClick=${()=>sV(v=>v+1)}>›</button></div>
+    ${isM&&html`<div class="alert alert-w">📦 MFM bestelling nodig! (€248.92)</div>`}
+    ${vw===1&&html`<div class="alert alert-w">💊 Supplements bij Kruidvat/Etos</div>`}
+    ${rG("m","📦 Meat For More","Gratis verzending • Week 1, 5, 9")}
+    ${rG("s","🛒 Supermarkt",null)}
+    ${rG("p","💊 Supplements","Eenmalig week 1")}
+    <div class="card"><div class="card-t" style="margin-bottom:10px">💰 Week ${vw}</div>${ct("m")>0&&html`<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:#98989d">MFM</span><span class="mono" style="font-weight:600">€${ct("m").toFixed(2)}</span></div>`}<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:#98989d">Supermarkt</span><span class="mono" style="font-weight:600">€${ct("s").toFixed(2)}</span></div>${ct("p")>0&&html`<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:#98989d">Supplements</span><span class="mono" style="font-weight:600">€${ct("p").toFixed(2)}</span></div>`}<div style="display:flex;justify-content:space-between;padding:10px 0;font-size:15px;border-top:1px solid #2c2c2e;margin-top:6px"><span style="font-weight:700">Totaal</span><span class="mono" style="font-weight:700;font-size:18px;color:#e85d3a">€${total.toFixed(2)}</span></div></div>
+    <div class="card"><div class="card-t" style="margin-bottom:10px">🥩 Week Vlees</div><div style="font-size:13px;color:#98989d;line-height:1.7">Ribeye: 1.4kg • Spareribs: 1.35kg<br/>Gehakt: 1.45kg • Wings: 800g<br/>Bacon: 300g • Leverworst: 150g<br/>Eieren: 30 stuks</div></div>
+  </div>`;
+}
+
+/* === SETTINGS === */
+function Sett({se,onReset}){
+  const[sc,sSc]=useState(false);const sd=new Date(se.startDate),ed=new Date(sd);ed.setDate(ed.getDate()+83);
+  const exp=()=>{const d={};Object.keys(localStorage).filter(k=>k.startsWith("cc_")).forEach(k=>{d[k]=localStorage.getItem(k)});const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="carnivoor-backup-"+new Date().toISOString().split("T")[0]+".json";a.click()};
+  const fr=useRef(null);
+  const imp=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);Object.entries(d).forEach(([k,v])=>localStorage.setItem(k,v));location.reload()}catch{alert("Ongeldig bestand")}};r.readAsText(f)};
+
+  return html`<div class="page">
+    <div style="padding:12px 0 20px"><div class="title">Instellingen</div></div>
+    <div class="card"><div class="card-t" style="margin-bottom:14px">📋 Info</div>${[["Start",sd.toLocaleDateString("nl-NL")],["Eind",ed.toLocaleDateString("nl-NL")],["Start gewicht",se.startWeight+"kg"],["Doel",se.goalWeight+"kg"],["Budget","€1.054,76"],["Per week","~€88"]].map(([l,v])=>html`<div class="row"><span style="font-size:14px;color:#98989d">${l}</span><span class="mono" style="font-size:14px;font-weight:600">${v}</span></div>`)}</div>
+    <div class="card"><div class="card-t" style="margin-bottom:14px">📅 MFM Bestellingen</div>${[["Week 1","Eerste + supplements"],["Week 5","Tweede + yoghurt start"],["Week 9","Laatste bestelling"]].map(([w,d])=>html`<div class="row"><span style="font-weight:700;font-size:14px">${w}</span><span style="font-size:13px;color:#98989d">${d}</span></div>`)}</div>
+    <div class="card"><div class="card-t" style="margin-bottom:14px">💾 Data</div><div style="display:flex;gap:8px"><button class="btn btn-s" style="flex:1;font-size:13px" onClick=${exp}>📤 Export</button><button class="btn btn-s" style="flex:1;font-size:13px" onClick=${()=>fr.current?.click()}>📥 Import</button></div><input ref=${fr} type="file" accept=".json" style="display:none" onChange=${imp}/></div>
+    <div class="card"><button class="btn btn-d" onClick=${()=>sSc(true)}>🗑️ Reset alle data</button></div>
+    ${sc&&html`<div class="modal" onClick=${()=>sSc(false)}><div class="modal-c" onClick=${e=>e.stopPropagation()}><div style="font-weight:700;font-size:17px;margin-bottom:8px">⚠️ Alle data wissen?</div><div style="font-size:14px;color:#98989d;margin-bottom:20px">Dit kan niet ongedaan worden!</div><div style="display:flex;gap:8px"><button class="btn btn-s" style="flex:1" onClick=${()=>sSc(false)}>Annuleren</button><button class="btn btn-d" style="flex:1" onClick=${()=>{onReset();sSc(false)}}>Wis alles</button></div></div></div>`}
+  </div>`;
+}
+
+/* === APP === */
+function App(){
+  const[se,sSe]=useLS("settings",null),[pg,sPg]=useState("today"),[sd,sSd]=useState(null);
+  const[co,sCo]=useLS("completed",{}),[wl,sWl]=useLS("weightLog",[]),[no,sNo]=useLS("notes",{}),[gr,sGr]=useLS("groceries",{});
+  const{cw,cd}=useMemo(()=>{if(!se?.startDate)return{cw:1,cd:0};const d=Math.floor((new Date()-new Date(se.startDate))/864e5);return{cw:Math.min(12,Math.max(1,Math.floor(d/7)+1)),cd:(new Date().getDay()+6)%7}},[se?.startDate]);
+  const ad=sd!==null?sd:cd;
+  const reset=()=>{Object.keys(localStorage).filter(k=>k.startsWith("cc_")).forEach(k=>localStorage.removeItem(k));sSe(null);sCo({});sWl([]);sNo({});sGr({});sPg("today")};
+  if(!se?.ok)return html`<${Setup} onDone=${(s,w)=>{sSe(s);sWl(w)}}/>`;
+  const N=[{id:"today",ic:"🏠",lb:"Vandaag"},{id:"week",ic:"📅",lb:"Week"},{id:"progress",ic:"📊",lb:"Progress"},{id:"groceries",ic:"🛒",lb:"Boodschap"},{id:"settings",ic:"⚙️",lb:"Instelling"}];
+  return html`<div>
+    ${pg==="today"&&html`<${Today} se=${se} cw=${cw} cd=${ad} co=${co} sC=${sCo} no=${no} sN=${sNo}/>`}
+    ${pg==="week"&&html`<${WeekPg} se=${se} cw=${cw} cd=${cd} co=${co} onSel=${i=>{sSd(i);sPg("today")}}/>`}
+    ${pg==="progress"&&html`<${Prog} se=${se} co=${co} wl=${wl} sWL=${sWl}/>`}
+    ${pg==="groceries"&&html`<${Groc} cw=${cw} gr=${gr} sG=${sGr}/>`}
+    ${pg==="settings"&&html`<${Sett} se=${se} onReset=${reset}/>`}
+    <nav class="nav">${N.map(n=>html`<div class="nav-i${pg===n.id?" on":""}" onClick=${()=>{sPg(n.id);if(n.id==="today")sSd(null)}}><span class="nav-ic">${n.ic}</span>${n.lb}</div>`)}</nav>
+  </div>`;
+}
+
+render(html`<${App}/>`,document.getElementById("app"));
+</script>
+</body>
+</html>
